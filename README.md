@@ -54,9 +54,10 @@ npm run preview
 
 1. Download Spring Application
 
-    Download the zip code of the [Notes App Back-end spring application](https://github.com/STzelas/Noterr-App-Spring-Back-end)
+    Download this apps [release](https://github.com/STzelas/Noterr-App-React-Front-end/releases/tag/v0.2.1) and the zip code of the [Notes App Back-end spring application](https://github.com/STzelas/Noterr-App-Spring-Back-end)
+  
 
-2. Extract the folder to a project-root folder
+3. Extract the folder to a project-root folder
 
     Structure should be:
     ```
@@ -64,7 +65,7 @@ npm run preview
           ├─ react-app/
           └─ spring-app/
 
-3. in spring-app/ deploy Docker
+4. in spring-app/ deploy Docker
 
    
    ```
@@ -74,7 +75,7 @@ npm run preview
         docker-compose up --build
    ```
 
-4. App is ready to use!
+5. App is ready to use!
 
 ## Future Improvements
 
