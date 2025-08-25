@@ -75,3 +75,8 @@ npm run preview
    ```
 
 4. App is ready to use!
+
+## Future Improvements
+
+- Better documentation
+- Seperation of Concerns (Soc) improvements
