@@ -43,10 +43,11 @@ cd noterr-app-react-front-end-0.2.1
 npm install
 ```
 
-3. Run dev environment
+3. Run preview environment
 
+    Preview enviroment do not have all endpoints unlocked because of security. For full access you need [Spring boot back-end application](https://github.com/STzelas/Noterr-App-Spring-Back-end) as well.
 ```
-npm run dev
+npm run preview
 ```
 
 ## Deploy using Docker
@@ -65,8 +66,10 @@ npm run dev
 
 3. in spring-app/ deploy Docker
 
-   cd to spring-app/ and deploy the app
+   
    ```
+   cd to spring-app/ and deploy the app
+   
    C:/project-root/spring-app/~
         docker-compose up --build
    ```
