@@ -1,69 +1,84 @@
-# React + TypeScript + Vite
+# Notes & Tasks App - React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **React frontend** for the Notes & Tasks application. It provides a clean, interactive and user-friendly interface to manage **notes and tasks** and communicates seamlessly with a **Spring Boot backend**. The entire application can be deployed together using **Docker**.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Notes Management**
+  - Create, read, update, and delete notes  
+  - **Notes Sidebar** for navigation and notes interaction  
+  - **Note Editor** for editing content 
+- **Tasks / Todo Management**
+  - Add, edit, mark as done, and delete tasks  
+  - Task lists linked to specific **Importance** attribute  
+- Local state management for smooth UI experience  
+- **Form validation** with Zod  
+- Integration with a **Spring Boot backend** for persistent storage  
+- Full support for **RESTful API** operations via Axios  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **Frontend:** React, TypeScript, Axios, Zod  
+- **Backend:** Spring Boot (REST API)  
+- **Deployment:** Docker  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Setup & Run Dev enviroment Locally
+
+1. **Clone the repository**
+
+```bash
+git clone git@github.com:STzelas/Noterr-App-React-Front-end.git
+
+cd noterr-app-react-front-end-0.2.1
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependancies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+npm install
+```
+
+3. Run preview environment
+
+    Preview enviroment do not have all endpoints unlocked because of security. For full access you need [Spring boot back-end application](https://github.com/STzelas/Noterr-App-Spring-Back-end) as well.
+```
+npm run preview
+```
+
+## Deploy using Docker
+
+1. Download Spring Application
+
+    Download this apps [release](https://github.com/STzelas/Noterr-App-React-Front-end/releases/tag/v0.2.1) and the zip code of the [Notes App Back-end spring application](https://github.com/STzelas/Noterr-App-Spring-Back-end)
+  
+
+3. Extract the folder to a project-root folder
+
+    Structure should be:
+    ```
+    project-root/
+          ├─ react-app/
+          └─ spring-app/
+
+4. in spring-app/ deploy Docker
+
+   
+   ```
+   cd to spring-app/ and deploy the app
+   
+   C:/project-root/spring-app/~
+        docker-compose up --build
+   ```
+
+5. App is ready to use!
+
+## Future Improvements
+
+- Better documentation
+- Seperation of Concerns (Soc) improvements
+- Mobile Support
