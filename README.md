@@ -27,6 +27,19 @@ This is the **React frontend** for the Notes & Tasks application. It provides a 
 
 ---
 
+## Prerequisites
+
+### Local Development
+To run the app locally, make sure you have installed:
+- **Java 21** (for the Spring Boot back-end)
+- **Node.js 20** (for the React front-end)
+- **MySQL** (for database access)
+
+### Docker Deployment
+To run with Docker, make sure you have:
+- **Docker** (latest version recommended)
+- **Docker Compose**
+
 ## Setup & Run Dev enviroment Locally
 
 1. **Clone the repository**
