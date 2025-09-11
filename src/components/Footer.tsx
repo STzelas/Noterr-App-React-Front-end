@@ -11,7 +11,7 @@ const Footer = () => {
             <p
               className={"text-sm font-medium transition-colors duration-300 p-2"}
             >
-              © {new Date().getFullYear()}, Project made by me
+              © {new Date().getFullYear()}, Project made by Tzelas
             </p>
             <a
               href="https://github.com/STzelas"
