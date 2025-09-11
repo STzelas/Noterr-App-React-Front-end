@@ -17,15 +17,11 @@ This is the **React frontend** for the Notes & Tasks application. It provides a 
 - Integration with a **Spring Boot backend** for persistent storage  
 - Full support for **RESTful API** operations via Axios  
 
----
-
 ## Tech Stack
 
 - **Frontend:** React, TypeScript, Axios, Zod  
 - **Backend:** Spring Boot (REST API)  
 - **Deployment:** Docker  
-
----
 
 ## Prerequisites
 
