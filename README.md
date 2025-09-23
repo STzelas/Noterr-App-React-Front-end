@@ -91,3 +91,4 @@ npm run preview
 - Better documentation
 - Seperation of Concerns (Soc) improvements
 - Mobile Support
+- Dark Mode Support
