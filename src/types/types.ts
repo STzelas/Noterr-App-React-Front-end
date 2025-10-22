@@ -5,6 +5,7 @@ export const noteSchema = z.object({
   title: z.string().min(1, "Title is required").max(255, "Title must not be more than 255 characters"),
   content: z.string().min(1, "Content is required").max(2000, "Content must not be more than 2000 characters"),
   deleted: z.boolean().optional(),
+  order: z.number().optional(),
 })
 
 export type NoteType = z.infer<typeof noteSchema>;
@@ -65,6 +66,7 @@ export type NoteSideBarProps = {
   onNoteSelect: (note: NoteType) => void;
   onNoteDelete: (id : number) => void;
   onCreateNewNote: () => void;
+  onNotesReorder: (notes: NoteType[]) => void;
 };
 
 export type NoteViewProps = {
