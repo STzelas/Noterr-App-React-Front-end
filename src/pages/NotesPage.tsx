@@ -55,6 +55,10 @@ const NotesPage = () => {
     setSelectedNote(newNote);
   };
 
+  const handleNotesReorder = (reorderedNotes: NoteType[]) => {
+    setNotes(reorderedNotes);
+  }
+
   return (
     <>
       <div className="flex justify-center w-full space-x-4 mt-2">
@@ -64,6 +68,7 @@ const NotesPage = () => {
                         onNoteSelect={setSelectedNote}
                         onNoteDelete={handleDelete}
                         onCreateNewNote={handleCreateNewNote}
+                        onNotesReorder={handleNotesReorder}
           />
         </div>
         <div className={"w-[75%] h-[75%]"}>
