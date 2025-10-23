@@ -1,13 +1,84 @@
 import TodoAddComponent from "@/components/TodoApp/TodoAddComponent.tsx";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
-import type {FilterProps, ImportanceFilter, TableWithResultProps} from "@/types/types.ts";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
-import {Checkbox} from "@/components/ui/checkbox.tsx";
-import {Badge} from "@/components/ui/badge.tsx";
-import TodoEditComponent from "@/components/TodoApp/TodoEditComponent.tsx";
-import TodoDeleteComponent from "@/components/TodoApp/TodoDeleteComponent.tsx";
+import type {FilterProps, ImportanceFilter, TableWithResultProps, CompletionSort} from "@/types/types.ts";
+import {Table, TableBody, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {useState} from "react";
+import SortableTodoRow from "@/components/TodoApp/SortableTodoRow.tsx";
+import {ArrowUpDown, GripVertical} from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
 
-const TableWithResultsComponent = ({todos, onTodoDelete, onTodoChange, onTodoCheck, filter, onFilterChange}: TableWithResultProps & FilterProps) => {
+const TableWithResultsComponent = ({todos, onTodoDelete, onTodoChange, onTodoCheck, filter, onFilterChange, onTodosReorder, completionSort, onCompletionSortChange}: TableWithResultProps & FilterProps) => {
+  const [activeId, setActiveId] = useState<number | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 }
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(event.active.id as number);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (active.id !== over?.id) {
+      const oldIndex = todos.findIndex((todo) => todo.id === active.id);
+      const newIndex = todos.findIndex((todo) => todo.id === over?.id);
+
+      const reorderedTodos = arrayMove(todos, oldIndex, newIndex);
+      const todosWithOrder = reorderedTodos.map((todo, index) => ({
+        ...todo,
+        order: index
+      }));
+
+      onTodosReorder(todosWithOrder);
+    }
+  }
+
+  const handleCompletionSortClick = () => {
+    let newSort: CompletionSort;
+    if (completionSort === "none") {
+      newSort = "completed-first";
+    } else if (completionSort === "completed-first") {
+      newSort = "incomplete-first";
+    } else {
+      newSort = "none";
+    }
+    onCompletionSortChange(newSort);
+  };
+
+  const getArrowRotation = () => {
+    if (completionSort === "completed-first") {
+      return "rotate-180 text-gray-800"; // Darker gray for completed first
+    } else if (completionSort === "incomplete-first") {
+      return "rotate-0 text-gray-800"; // Darker gray for incomplete first
+    }
+    return "text-gray-400 opacity-50"; // Lighter gray and slightly transparent for none
+  };
+
   return (
     <>
       <div className="flex flex-col w-full mx-auto p-8 space-y-4">
@@ -37,54 +108,64 @@ const TableWithResultsComponent = ({todos, onTodoDelete, onTodoChange, onTodoChe
                 </SelectContent>
               </Select>
             </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead></TableHead>
-                  <TableHead className={"font-semibold w-1/2"}>Description</TableHead>
-                  <TableHead className={"font-semibold w-1/6"}>Importance</TableHead>
-                  <TableHead className={"font-semibold w-1/3"}>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {todos.map((todo) => (
-                  <TableRow key={todo.id}
-                            className={`p-3 mr-5 rounded-xl cursor-pointer hover:bg-accent transition-colors ${todo.isComplete ? "bg-gray-200 text-gray-500" : "hover:bg-gray-200"}`}>
-                    <TableCell className={"flex items-center justify-center mt-1"}>
-                      <Checkbox
-                        className={"h-4 w-4 bg-white border border-gray-300"}
-                        checked={todo.isComplete}
-                        onCheckedChange={() => onTodoCheck(todo.id)}
-                      />
-                    </TableCell>
-                    <TableCell className={`${todo.isComplete ? "line-through" : ""} max-w-[300px]`}>
-                      <p className="truncate overflow-auto whitespace-nowrap p-2">{todo.description}</p>
-                    </TableCell>
-                    <TableCell className={"font-semibold"}>
-                      <Badge
-                        variant="secondary"
-                        className={
-                          "rounded-full px-3 py-1 text-sm font-medium " +
-                          (todo.importance === "MAJOR"
-                            ? "bg-red-100 text-red-800 border border-red-200"
-                            : todo.importance === "MODERATE"
-                              ? "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                              : "bg-green-100 text-green-800 border border-green-200")
-                        }
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-8"></TableHead> {/* Drag handle column */}
+
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        onClick={handleCompletionSortClick}
+                        className="flex items-center gap-1"
                       >
-                        {todo.importance.charAt(0) + todo.importance.slice(1).toLowerCase()}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className={"flex space-x-2"}>
-                        <TodoEditComponent id={todo.id} description={todo.description} importance={todo.importance} onTodoChange={onTodoChange}/>
-                        <TodoDeleteComponent id={todo.id} handleDelete={onTodoDelete}/>
-                      </div>
-                    </TableCell>
+                        Completed
+                        <span className={`ml-2 h-4 w-4 transition-transform ${getArrowRotation()}`}>
+                          <ArrowUpDown />
+                        </span>
+                      </Button>
+                    </TableHead>
+                    <TableHead className="font-semibold w-1/2">Description</TableHead>
+                    <TableHead className="font-semibold w-1/6">Importance</TableHead>
+                    <TableHead className="font-semibold w-1/3">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  <SortableContext
+                    items={todos.map(todo => todo.id || 0)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {todos.map((todo) => (
+                      <SortableTodoRow
+                        key={todo.id}
+                        todo={todo}
+                        onTodoDelete={onTodoDelete}
+                        onTodoChange={onTodoChange}
+                        onTodoCheck={onTodoCheck}
+                      />
+                    ))}
+                  </SortableContext>
+                </TableBody>
+              </Table>
+
+              {/* DRAG OVERLAY */}
+              <DragOverlay>
+                {activeId ? (
+                  <div className="bg-white shadow-lg border border-gray-200 opacity-90 p-2 rounded">
+                    <div className="flex items-center gap-2">
+                      <GripVertical className="h-4 w-4 text-gray-400" />
+                      <span>{todos.find(t => t.id === activeId)?.description}</span>
+                    </div>
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
           </div>
         </div>
       </div>
