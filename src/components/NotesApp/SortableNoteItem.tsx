@@ -37,7 +37,6 @@ function SortableNoteItem({ note, onNoteSelect, onNoteDelete }: SortableNoteItem
     >
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          {/* DRAG HANDLE */}
           <div
             {...attributes}
             {...listeners}
@@ -47,8 +46,6 @@ function SortableNoteItem({ note, onNoteSelect, onNoteDelete }: SortableNoteItem
           >
             <GripVertical className="h-4 w-4 text-gray-400 hover:text-gray-600" />
           </div>
-
-          {/* NOTE CONTENT */}
           <div className="min-w-0 flex-1">
             <h3 className="font-medium text-wrap truncate">{note.title.slice(0, 50)}</h3>
             <p className="text-sm text-muted-foreground truncate">
