@@ -3,7 +3,7 @@ import TodoAddComponent from "@/components/TodoApp/TodoAddComponent.tsx";
 import {TableNoResultsComponent} from "@/components/TodoApp/TableNoResultsComponent.tsx";
 import TableWithResultsComponent from "@/components/TodoApp/TableWithResultsComponent.tsx";
 
-export const TodoView = ({loading, todos, onTodoDelete, onTodoChange, onTodoCheck, filter, onFilterChange}: TodoViewProps & TodoChangeProps & TodoCheckedProps & FilterProps) => {
+export const TodoView = ({loading, todos, onTodoDelete, onTodoChange, onTodoCheck, filter, onFilterChange, onTodosReorder, completionSort, onCompletionSortChange}: TodoViewProps & TodoChangeProps & TodoCheckedProps & FilterProps) => {
 
   const isEmptyBecauseOfFilter = todos.length === 0 && filter !== "ALL";
 
@@ -49,7 +49,7 @@ export const TodoView = ({loading, todos, onTodoDelete, onTodoChange, onTodoChec
   return (
     <>
       <div>
-        <TableWithResultsComponent todos={todos} onTodoDelete={onTodoDelete} onTodoChange={onTodoChange} onTodoCheck={onTodoCheck} filter={filter} onFilterChange={onFilterChange}/>
+        <TableWithResultsComponent todos={todos} onTodoDelete={onTodoDelete} onTodoChange={onTodoChange} onTodoCheck={onTodoCheck} filter={filter} onFilterChange={onFilterChange} onTodosReorder={onTodosReorder} completionSort={completionSort} onCompletionSortChange={onCompletionSortChange}/>
       </div>
     </>
   )
