@@ -3,12 +3,14 @@ import {useEffect, useState} from "react";
 import axiosInstance from "@/api/axiosInstance.ts";
 import type {ImportanceFilter, TodoType} from "@/types/types.ts";
 import {deleteTodo, updateTodo} from "@/api/todo.ts";
+import { type CompletionSort} from "@/types/types.ts";
 
 const TodoPage = () => {
   const [todos, setTodos] = useState<TodoType[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
   const [filter, setFilter] = useState<ImportanceFilter>("ALL");
+  const [ completionSort, setCompletionSort] = useState<CompletionSort>("none")
 
   useEffect(() => {
     document.title = "Your Tasks";
@@ -55,8 +57,21 @@ const TodoPage = () => {
     }
   };
 
+  const handleTodosReorder = (reorderedTodos: TodoType[]) => {
+    setTodos(reorderedTodos);
+  };
+
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (completionSort === "completed-first") {
+      return (b.isComplete ? 1 : 0) - (a.isComplete ? 1 : 0);
+    } else if (completionSort === "incomplete-first") {
+      return (a.isComplete ? 1 : 0) - (b.isComplete ? 1 : 0);
+    }
+    return 0;
+  })
+
   const filteredTodos =
-    filter === "ALL" ? todos : todos.filter(t => t.importance === filter);
+    filter === "ALL" ? sortedTodos : sortedTodos.filter(t => t.importance === filter);
 
   return (
     <>
@@ -78,6 +93,9 @@ const TodoPage = () => {
         onTodoCheck={handleChecked}
         filter={filter}
         onFilterChange={setFilter}
+        onTodosReorder={handleTodosReorder}
+        completionSort={completionSort}
+        onCompletionSortChange={setCompletionSort}
       />
     </>
   )
